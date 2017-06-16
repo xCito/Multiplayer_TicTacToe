@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <ctype.h>
 #include "Player.h"
 #include "HumanPlayer.h"
 #include "Ai_Player.h"
@@ -20,12 +20,27 @@ int getIntInput(string);
 
 int getNumberOfPlayer()
 {
-	return getIntInput("Enter number of players: ");
+	int num = getIntInput("Enter number of players: ");
+	while(num < 1)
+	{
+		cout << "Invalid input..." <<endl;
+		num = getIntInput("Enter number of players: ");
+	}
+
+	return num;
 }
 
-int getNumberOfHuman()
+int getNumberOfHuman(int numPlayers)
 {
-	return getIntInput("How many Human players: ");
+	int num = getIntInput("How many Human players: ");
+
+	while(num < 0 || num > numPlayers)
+	{
+		cout << "Invalid number of Human players..." <<endl;
+		num = getIntInput("How many Human players: ");
+	}
+
+	return num;
 }
 
 int getIntInput(string msg)
@@ -49,22 +64,44 @@ string getStringInput(string msg)
 	return input;
 
 }
-void setPlayerSymbol(char sym)
+bool isValidSymbol(vector<Player*> otherPlayers, char sym)
 {
+	for(unsigned int i=0; i<otherPlayers.size(); i++)
+	{
+		if(otherPlayers.at(i)->getSymbol() == sym)
+			return false;
+	}
+	return true;
+}
 
+char userSymbolChoice(vector<Player*> otherPlayers, string msg)
+{
+	char input = getStringInput(msg)[0];
+
+	if(isalpha(input))
+		input = toupper(input);
+
+	while(!isValidSymbol(otherPlayers, input))
+	{
+		cout << "'" << input << "' is Taken, try again..." <<endl;
+		input = userSymbolChoice(otherPlayers, msg);
+	}
+
+	return input;
 }
 
 int main()
 {
 	vector<Player*> players;
 	int numPlayers = getNumberOfPlayer();
-	int numHuman = getNumberOfHuman();
+	int numHuman = getNumberOfHuman(numPlayers);
+
 	string input;
 
 	for(int i=0; i<numHuman; i++)
 	{
 		string msg = "Choose symbol for Human Player " + std::to_string(i+1) + ": ";
-		input = getStringInput(msg);
+		input = userSymbolChoice(players, msg);
 		players.push_back(new HumanPlayer("Human Player " + std::to_string(i+1),input[0]));
 		players.back()->setAsHuman(true);
 	}
@@ -72,7 +109,7 @@ int main()
 	for(int i=0; i<numPlayers-numHuman; i++)
 	{
 		string msg = "Choose symbol for AI player " + std::to_string(i+1) + ": ";
-		input = getStringInput(msg);
+		input = userSymbolChoice(players, msg);
 		players.push_back(new Ai_Player("AI Player " + std::to_string(i+1),input[0]));
 	}
 
@@ -86,6 +123,10 @@ int main()
 
 	while(!board.isFull() && !win)
 	{
+		for(int i=0; i<20;i++)
+			cout << "/\\";
+		cout <<endl;
+
 		master = players[turn%numPlayers];
 		master->makeMove(board,0);
 		board.displayBoard();
@@ -101,10 +142,8 @@ int main()
 	}
 
 	if(win)
-	{
-		(master->isPlayerHuman())? cout << "Human": cout << "AI ";
-		cout << "Player "<< (turn%numPlayers)+1 <<" won" <<endl;
-	}
+		cout << master->getName() << " Wins! (" <<
+				master->getSymbol()<< ")" << endl;
 	else
 		cout << "It's a Tie!" << endl;
 
