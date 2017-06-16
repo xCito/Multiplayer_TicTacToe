@@ -38,7 +38,7 @@ TicTacToeBoard::TicTacToeBoard(int numPlayers)
  */
 TicTacToeBoard::~TicTacToeBoard()
 {
-	cout << "TicTacToeBoard destructor" << endl;
+	//cout << "TicTacToeBoard destructor" << endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
