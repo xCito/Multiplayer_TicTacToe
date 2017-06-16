@@ -29,16 +29,16 @@ HumanPlayer::~HumanPlayer()
 void HumanPlayer::makeMoveHuman(TicTacToeBoard& board)
 {
 	int x, y;
-	cout << "Human player makemove" << endl;
+	cout << this->getName() << endl;
 	do{
 
 		do{
-			y = promptUser("Choose Row: ");
+			y = promptUser("  Choose Row: ");
 			y-=1;
 		}while(!inputValidation(y, board.getSize()));
 
 		do{
-			x = promptUser("Choose Col: ");
+			x = promptUser("  Choose Col: ");
 			x-=1;
 		}while(!inputValidation(x, board.getSize()));
 
@@ -61,7 +61,7 @@ bool HumanPlayer::inputValidation(int coor, int boardSize)
 int HumanPlayer::promptUser(string msg)
 {
 	int input;
-	cout << getName() << msg;
+	cout << msg;
 	cin >> input;
 
 	return input;

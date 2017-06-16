@@ -29,7 +29,7 @@ Ai_Player::~Ai_Player()
 
 void Ai_Player::makeMoveAI(TicTacToeBoard& board, int difficulty)
 {
-	cout << "Ai, make move" << endl;
+	cout << this->getName() << endl;
 
 	if(difficulty==0)
 		makeEasyMove(board);

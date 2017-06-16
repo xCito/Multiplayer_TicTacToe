@@ -16,24 +16,39 @@
 
 using namespace std;
 
+int getIntInput(string);
+
 int getNumberOfPlayer()
 {
-	int input;
-	cout << "Enter number of players: ";
-	cin >> input;
-
-	return input;
+	return getIntInput("Enter number of players: ");
 }
 
 int getNumberOfHuman()
 {
+	return getIntInput("How many Human players: ");
+}
+
+int getIntInput(string msg)
+{
 	int input;
-	cout << "How many Human players: ";
+	cout << msg;
 	cin >> input;
+	cin.clear();
+	cin.ignore(50, '\n');
 
 	return input;
 }
+string getStringInput(string msg)
+{
+	string input;
+	cout << msg;
+	cin >> input;
+	cin.clear();
+	cin.ignore(50, '\n');
 
+	return input;
+
+}
 void setPlayerSymbol(char sym)
 {
 
@@ -44,18 +59,21 @@ int main()
 	vector<Player*> players;
 	int numPlayers = getNumberOfPlayer();
 	int numHuman = getNumberOfHuman();
+	string input;
 
-	cout << "You're X;"<<endl;
-	players.push_back(new HumanPlayer('X'));
-	players.at(0)->setAsHuman(true);
-
-	for(int i=0; i<numPlayers-1; ++i)
+	for(int i=0; i<numHuman; i++)
 	{
-		string input;
-		cout << "Choose symbol for other player: ";
-		cin >>input;
+		string msg = "Choose symbol for Human Player " + std::to_string(i+1) + ": ";
+		input = getStringInput(msg);
+		players.push_back(new HumanPlayer("Human Player " + std::to_string(i+1),input[0]));
+		players.back()->setAsHuman(true);
+	}
 
-		players.push_back(new Ai_Player(input[0]));
+	for(int i=0; i<numPlayers-numHuman; i++)
+	{
+		string msg = "Choose symbol for AI player " + std::to_string(i+1) + ": ";
+		input = getStringInput(msg);
+		players.push_back(new Ai_Player("AI Player " + std::to_string(i+1),input[0]));
 	}
 
 	TicTacToeBoard board(numPlayers);
