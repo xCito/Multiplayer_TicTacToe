@@ -27,7 +27,12 @@ public:
 	bool checkVertical(int,int,char);
 	bool checkHorizontal(int,int,char);
 	bool checkDiagonals(int,int,char);
-
+	void getCellInformation(int);
+	void getCellInformation(int,int);
+	int getConsecutiveVert(int,int);
+	int getConsecutiveHori(int,int);
+	int getConsecutiveBackDiag(int,int);
+	int getConsecutiveFronDiag(int,int);
 	void setNumNeededToWin(int);
 	int getNumNeededToWin();
 private:

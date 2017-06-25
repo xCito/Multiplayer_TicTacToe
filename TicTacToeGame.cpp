@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <ctype.h>
+#include <cmath>
+
 #include "Player.h"
 #include "HumanPlayer.h"
 #include "Ai_Player.h"
@@ -95,7 +97,8 @@ int main()
 	vector<Player*> players;
 	int numPlayers = getNumberOfPlayer();
 	int numHuman = getNumberOfHuman(numPlayers);
-
+	int consec = 4; //ceil((numPlayers*2)/2) + 1;
+	cout << consec <<" in a row is needed to win" <<endl;
 	string input;
 
 	for(int i=0; i<numHuman; i++)
@@ -114,7 +117,7 @@ int main()
 	}
 
 	TicTacToeBoard board(numPlayers);
-	BoardChecker checker(board,3);
+	BoardChecker checker(board, consec);
 	board.displayBoard();
 
 	int turn=0;
@@ -128,9 +131,10 @@ int main()
 		cout <<endl;
 
 		master = players[turn%numPlayers];
-		master->makeMove(board,0);
+		master->makeMove(board,consec);
 		board.displayBoard();
 
+		checker.getCellInformation(board.getLastCellMarked()%board.getSize(),board.getLastCellMarked()/board.getSize() );
 		win = checker.checkForWin(board.getLastCellMarked());
 		if(win)
 			break;

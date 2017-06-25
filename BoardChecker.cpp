@@ -231,6 +231,155 @@ bool BoardChecker::checkDiagonals(int x, int y, char sym)
 return false;
 }
 
+
+void BoardChecker::getCellInformation(int cell)
+{
+	int size = board->getSize();
+	int x = cell%size;
+    int y = cell/size;
+
+	//cout << "Looking at row " << y << " and col "<< x<< endl;
+	//cout << "Cell Number: " << (y* board->getSize())+x << endl;
+	//cout << "Symbol: " <<board->getSymAtCell(x,y) <<endl;
+
+	getConsecutiveHori(x,y);
+	getConsecutiveVert(x,y);
+	getConsecutiveBackDiag(x,y);
+	getConsecutiveFronDiag(x,y);
+}
+void BoardChecker::getCellInformation(int x, int y)
+{
+	//cout << "Looking at row " << y << " and col "<< x<< endl;
+	//cout << "Cell Number: " << (y* board->getSize())+x << endl;
+	//cout << "Symbol: " <<board->getSymAtCell(x,y) <<endl;
+
+	getConsecutiveHori(x,y);
+	getConsecutiveVert(x,y);
+	getConsecutiveBackDiag(x,y);
+	getConsecutiveFronDiag(x,y);
+}
+
+int BoardChecker::getConsecutiveHori(int x, int y)
+{
+	int consecutive = 0;
+	int checkDistance = neededToWin;
+	char currentSym;
+	char sym = board->getSymAtCell(x,y);
+
+// CHECK RIGHT
+	for(int i=0; i<checkDistance; ++i)				// Checks current cell and to the right
+	{
+		currentSym = board->getSymAtCell(x+i,y);
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+// CHECK LEFT
+	for(int i=1; i<checkDistance; ++i)				// Checks to the right of current cell
+	{
+		currentSym = board->getSymAtCell(x-i,y);
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+	//cout << "There is " << consecutive << " " << "consecutive "
+	//	 << board->getSymAtCell(x,y) << "s Horizontally "<< endl;
+	return consecutive;
+}
+
+int BoardChecker::getConsecutiveVert(int x, int y)
+{
+	int consecutive = 0;
+	int checkDistance = neededToWin;
+	char currentSym;
+	char sym = board->getSymAtCell(x,y);
+
+// CHECK DOWN
+	for(int i=0; i<checkDistance; ++i)			// Checks current below and below
+	{
+		currentSym = board->getSymAtCell(x,y+i);
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+// CHECK UP
+	for(int i=1; i<checkDistance; ++i)			// Checks above current cell
+	{
+		currentSym = board->getSymAtCell(x,y-i);
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+	//cout << "There is " << consecutive << " " << "consecutive "
+	//		 << board->getSymAtCell(x,y) << "s Vertically "<< endl;
+	return consecutive;
+}
+
+int BoardChecker::getConsecutiveBackDiag(int x, int y)
+{
+	int consecutive = 0;
+	int checkDistance = neededToWin;
+	char currentSym;
+	char sym = board->getSymAtCell(x,y);
+
+// CHECK BOTTOM-RIGHT
+	for(int i=0; i<checkDistance; ++i){
+		currentSym = board->getSymAtCell(x+i,y+i);
+
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+// CHECK TOP-LEFT
+	for(int i=1; i<checkDistance; ++i){
+		currentSym = board->getSymAtCell(x-i,y-i);
+
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+	//cout << "There is " << consecutive << " " << "consecutive "
+	//			 << board->getSymAtCell(x,y) << "s Back-Diagonally"<< endl;
+	return consecutive;
+}
+
+int BoardChecker::getConsecutiveFronDiag(int x, int y)
+{
+	int consecutive = 0;
+	int checkDistance = neededToWin;
+	char currentSym;
+	char sym = board->getSymAtCell(x,y);
+
+// CHECK TOP-RIGHT
+	for(int i=0; i<checkDistance; ++i){
+		currentSym = board->getSymAtCell(x+i,y-i);
+
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+// CHECK BOTTOM-LEFT
+	for(int i=1; i<checkDistance; ++i){			// Forward slash Diagonal
+		currentSym = board->getSymAtCell(x-i,y+i);
+
+		if(sym != currentSym)
+			break;
+		++consecutive;
+	}
+
+	//cout << "There is " << consecutive << " " << "consecutive "
+	//				 << board->getSymAtCell(x,y) << "s Forward-Diagonally"<< endl;
+	return consecutive;
+}
+
+
 /*
  * To apply a new board for when a new game is started.
  * @param TicTacToeBoard& - The TTT board that will be reviewed.

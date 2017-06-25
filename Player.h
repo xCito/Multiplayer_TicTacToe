@@ -20,7 +20,7 @@ public:
 	Player();				// Constructor Default
 	Player(char);			// Constructor Overloaded
 	Player(string, char);	// Constructor Overloaded
-	~Player();				// Destructor
+	virtual ~Player();				// Destructor
 
 	char getSymbol() const;	// Accessor methods
 	string getName() const;
