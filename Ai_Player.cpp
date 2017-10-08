@@ -91,7 +91,7 @@ void Ai_Player::getOtherSymbolLocations(TicTacToeBoard board,vector<int> &others
 	for(int i=0; i<(size*size); ++i)
 	{
 		char curSym = board.getSymAtCell(i);
-		cout << curSym << ", ";
+		//cout << curSym << ", ";					<--- DEBUG COMMENT
 		if(curSym != AiSym && curSym != ' ')
 		{
 			others.push_back(i);

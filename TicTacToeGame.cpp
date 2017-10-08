@@ -35,11 +35,12 @@ int getNumberOfPlayer()
 int getNumberOfHuman(int numPlayers)
 {
 	int num = getIntInput("How many Human players: ");
-
+	//cout << num <<endl;
 	while(num < 0 || num > numPlayers)
 	{
 		cout << "Invalid number of Human players..." <<endl;
 		num = getIntInput("How many Human players: ");
+		cout << "-->" << num <<endl;
 	}
 
 	return num;
@@ -49,9 +50,12 @@ int getIntInput(string msg)
 {
 	int input;
 	cout << msg;
-	cin >> input;
+	bool valid = cin >> input;
 	cin.clear();
 	cin.ignore(50, '\n');
+
+	if(!valid)
+		input = getIntInput(msg);
 
 	return input;
 }
@@ -97,18 +101,20 @@ int main()
 	vector<Player*> players;
 	int numPlayers = getNumberOfPlayer();
 	int numHuman = getNumberOfHuman(numPlayers);
-	int consec = 4; //ceil((numPlayers*2)/2) + 1;
-	cout << consec <<" in a row is needed to win" <<endl;
+	int consec = 3; 						// <-- CHANGE THIS determines how many in a row is needed to win.
+	cout << "** " << consec <<" in a row is needed to win **" <<endl;
 	string input;
 
+	// Adding human players to the line up
 	for(int i=0; i<numHuman; i++)
 	{
-		string msg = "Choose symbol for Human Player " + std::to_string(i+1) + ": ";
+		string msg = "Choose symbol/character/number for Human Player " + std::to_string(i+1) + ": ";
 		input = userSymbolChoice(players, msg);
 		players.push_back(new HumanPlayer("Human Player " + std::to_string(i+1),input[0]));
 		players.back()->setAsHuman(true);
 	}
 
+	// Adding AI players to the line up
 	for(int i=0; i<numPlayers-numHuman; i++)
 	{
 		string msg = "Choose symbol for AI player " + std::to_string(i+1) + ": ";
@@ -120,7 +126,7 @@ int main()
 	BoardChecker checker(board, consec);
 	board.displayBoard();
 
-	int turn=0;
+	int turn= rand()%numPlayers;
 	bool win = false;
 	Player *master;
 
@@ -134,7 +140,9 @@ int main()
 		master->makeMove(board,consec);
 		board.displayBoard();
 
-		checker.getCellInformation(board.getLastCellMarked()%board.getSize(),board.getLastCellMarked()/board.getSize() );
+		checker.getCellInformation(board.getLastCellMarked()%board.getSize(),
+
+				board.getLastCellMarked()/board.getSize() );
 		win = checker.checkForWin(board.getLastCellMarked());
 		if(win)
 			break;

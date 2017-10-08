@@ -63,6 +63,8 @@ int HumanPlayer::promptUser(string msg)
 	int input;
 	cout << msg;
 	cin >> input;
+	cin.clear();
+	cin.ignore(50, '\n');
 
 	return input;
 }
