@@ -1,6 +1,6 @@
 /*
  * Player.cpp
- *
+ * Base Class
  *  Created on: Apr 13, 2017
  *      Author: Juan
  */

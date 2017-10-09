@@ -27,15 +27,21 @@ Ai_Player::~Ai_Player()
 	//cout << "Ai_Player destructor..." <<endl;
 }
 
+/*
+ * Decision Maker, to decided either to make a defensive move
+ * or a random selection move.
+ * @param board  - The current tictactoe board.
+ * @param consective - how many consective sym needed to win.
+ */
 void Ai_Player::makeMoveAI(TicTacToeBoard& board, int consecutive)
 {
 	cout << this->getName() << endl;
 	int choice = rand() % 10;
-	if(choice <= 2)
+	if(choice <= 2)									// 20% chance RANDOM
 	{
 		cout << "Going for a random Move" <<endl;
 		makeEasyMove(board);
-	}else
+	}else											// 80% chance DEFENSIVE
 	{
 		cout << "Going for a Defensive Move" <<endl;
 		if(!makeHardMove(board, consecutive))
@@ -43,9 +49,7 @@ void Ai_Player::makeMoveAI(TicTacToeBoard& board, int consecutive)
 			cout << "failed...."<< endl;
 			makeEasyMove(board);
 			}
-
 	}
-
 }
 
 /*
@@ -110,7 +114,6 @@ void Ai_Player::getOtherSymbolLocations(TicTacToeBoard board,vector<int> &others
 bool Ai_Player::blockOtherPlayer(TicTacToeBoard& board,vector<int> others,int neededToWin)
 {
 	BoardChecker check(board);
-
 	int size = board.getSize();
 	vector<Threat> threat;
 	int curCell, threatLevel;
@@ -125,47 +128,29 @@ bool Ai_Player::blockOtherPlayer(TicTacToeBoard& board,vector<int> others,int ne
 
 		threatLevel = check.getConsecutiveVert(x, y);
 		if(threatLevel == neededToWin-1)		// Are they n-1 away from getting n?
-		{
-			//cout << "Possible Vertical Threat..." <<endl;
 			isThreatVertical(board,threat,x,y);
-		}
 
 		threatLevel = check.getConsecutiveHori(curCell%size, curCell/size);
 		if(threatLevel == neededToWin-1)
-		{
-			//cout << "Possible Horizontal Threat" <<endl;
 			isThreatHorizontal(board,threat,x,y);
-		}
 
 		threatLevel = check.getConsecutiveBackDiag(curCell%size, curCell/size);
 		if(threatLevel == neededToWin-1)
-		{
-			//cout << "Possible Back dia Threat" <<endl;
 			isThreatBackDiagonal(board,threat,x,y);
-		}
 
 		threatLevel = check.getConsecutiveFronDiag(curCell%size, curCell/size);
 		if(threatLevel == neededToWin-1)
-		{
-			//cout << "Possible Front Diag Threat" <<endl;
 			isThreatFrontDiagonal(board,threat,x,y);
-		}
-
-
 	}
-	/*
-	for(int i=0; i<threat.size(); ++i)
-	{
-		cout << "--->";
-		threat.at(i).displayThreat();
-	}
-	 */
-	if(threat.empty())
+
+	if(threat.empty())	// No threats found
 		return false;
 
-	Threat randomBlock = threat.at(rand()% threat.size());
+	Threat randomBlock = threat.at(rand()% threat.size());	//randomly choose a threat to block.
+
 	cout << "BLOCK -->" << board.getSymAtCell(randomBlock.xCoor, randomBlock.yCoor) << "at ("
 				<< randomBlock.yCoor<<", " << randomBlock.xCoor << ") "<<endl;
+
 	board.markCell(randomBlock.xCoor, randomBlock.yCoor, getSymbol());
 	cout << "Ai, hard move: Strategic Choice" << endl;
 
@@ -176,9 +161,9 @@ bool Ai_Player::blockOtherPlayer(TicTacToeBoard& board,vector<int> others,int ne
  * Checks if symbol on TicTacToe board is a real threat VERTICALLY.
  *
  * @param  b - The tictactoe board
- * @param
- * @param
- * @param
+ * @param threats -
+ * @param x -
+ * @param y -
  * @returns False - If symbol is already blocked.
  * 			      - If winning spots is out of bounds of Board.
  * 			True  - If There's an open cell that AI can use to block.
